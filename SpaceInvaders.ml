@@ -1,10 +1,15 @@
 open Graphics;;
 open Printf;;
 open StdLabels;;
-
+let enemys_line = 4;;
+let enemys_row = 8;;
 open_graph " 900x600";;
-let rec build_enemys i= 
-  if i = 0 then [] else (50+70*i,500)::build_enemys (i-1)
+let rec build_enemys r l = 
+  if r < 0 
+    then if l = 0 
+          then []
+          else (build_enemys enemys_row (l-1))
+    else (70*r,550-50*l)::build_enemys (r-1) l
 ;;
 
 let get_time_now () = 
@@ -14,7 +19,7 @@ let get_time_now () =
 let draw_world ~player:(x,y) ~enemy:enemy_list =
   clear_graph ();
   fill_rect x y 100 100;
-  List.iter (fun (x2,y2) -> fill_rect x2 y2 50 50) enemy_list;
+  List.iter (fun (x2,y2) -> fill_rect x2 y2 25 25) enemy_list;
 ;;
 
 let enemy_far_right enemy_list =
@@ -23,9 +28,9 @@ let enemy_far_right enemy_list =
 ;;
 
 let update_enemys ~enemy:enemy_list old_time new_time =
-  if (new_time -. old_time) > 0.1 then
+  if (new_time -. old_time) > 0.5 then
     List.map (if fst(enemy_far_right enemy_list) >= 800 
-                              then  (fun (x,y) -> ((x-500) , y-70)) 
+                              then  (fun (x,y) -> ((x-200) , y-70)) 
                                 
                               else (fun (x,y) ->((x+50), y))) enemy_list
   else
@@ -54,5 +59,5 @@ let rec handler ~player:(x,y) ~enemy:enemy_list old_time =
 
 loop_at_exit [Key_pressed ; Button_down]
    (fun event ->
-      handler ~player:(300,100) ~enemy:(build_enemys 5) 0.0)
+      handler ~player:(300,100) ~enemy:(build_enemys enemys_row enemys_line) 0.0)
 ;;
