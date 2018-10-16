@@ -1,9 +1,12 @@
 open Graphics;;
 open Printf;;
 open StdLabels;;
+open Thread;;
 let enemys_line = 4;;
 let enemys_row = 8;;
+let speed_enemy = 0.5;;
 open_graph " 900x600";;
+
 let rec build_enemys r l = 
   if r < 0 
     then if l = 0 
@@ -16,10 +19,29 @@ let get_time_now () =
   Unix.time ()
 ;;
 
+let draw_enemy (x,y) =
+  fill_rect x y 25 25;
+;;
+
+let rec draw_all_enemys enemy_list i =
+  if i < (List.length enemy_list) then
+    (Thread.create draw_enemy (List.nth enemy_list i))::draw_all_enemys enemy_list (i+1)
+    else []
+;;
+
 let draw_world ~player:(x,y) ~enemy:enemy_list =
   clear_graph ();
-  fill_rect x y 100 100;
-  List.iter (fun (x2,y2) -> fill_rect x2 y2 25 25) enemy_list;
+  fill_rect x y 50 25;
+  let l = (draw_all_enemys enemy_list 0) in
+    List.iter (fun i -> Thread.join i) l
+  
+;;
+
+let draw_player (x,y) = 
+  set_color white;
+  fill_rect 0 0 1000 100;
+  set_color black;
+  fill_rect x y 50 25;
 ;;
 
 let enemy_far_right enemy_list =
@@ -27,8 +49,8 @@ let enemy_far_right enemy_list =
     List.hd (List.rev list)
 ;;
 
-let update_enemys ~enemy:enemy_list old_time new_time =
-  if (new_time -. old_time) > 0.5 then
+let update_enemys ~enemy:enemy_list update =
+  if update then
     List.map (if fst(enemy_far_right enemy_list) >= 800 
                               then  (fun (x,y) -> ((x-200) , y-70)) 
                                 
@@ -39,14 +61,16 @@ let update_enemys ~enemy:enemy_list old_time new_time =
 
 let rec handler ~player:(x,y) ~enemy:enemy_list old_time =
   
-  draw_world ~player:(x,y) ~enemy:enemy_list;
+  draw_player (x,y);
 
   let new_time = get_time_now () in
-    let enemy' = update_enemys ~enemy:enemy_list old_time new_time in
-    let time' = if (new_time -. old_time) > 0.5 then new_time else old_time in
+  let update = (new_time -. old_time) > speed_enemy in
+    let enemy' = update_enemys ~enemy:enemy_list update in
+    let time' = if update then new_time else old_time in
+    if update then (draw_world ~player:(x,y) ~enemy:enemy_list);
 
   let event = Graphics.wait_next_event [ Graphics.Poll ] in
-    if event.Graphics.keypressed then
+    if event.Graphics.keypressed then 
       match (read_key ()) with
       |'a' -> handler ~player:((x-20),y) ~enemy:enemy' time'
       |'d' -> handler ~player:((x+20),y) ~enemy:enemy' time'
@@ -59,5 +83,5 @@ let rec handler ~player:(x,y) ~enemy:enemy_list old_time =
 
 loop_at_exit [Key_pressed ; Button_down]
    (fun event ->
-      handler ~player:(300,100) ~enemy:(build_enemys enemys_row enemys_line) 0.0)
+      handler ~player:(300,10) ~enemy:(build_enemys enemys_row enemys_line) 0.0)
 ;;
