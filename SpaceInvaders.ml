@@ -8,11 +8,14 @@ type game_state =
   player : int * int;
   enemies : (int * int) list;
   bullets : (int * int) list;
+  enemy_delay : float;
+  bullet_delay : float;
+  enemy_speed : float;
+  bullet_speed : float;
 }
 
 let enemies_line = 4;;
 let enemies_row = 8;;
-let speed_enemy = 0.5;;
 open_graph " 900x600";;
 
 let rec build_enemies r l = 
@@ -27,29 +30,14 @@ let get_time_now () =
   Unix.time ()
 ;;
 
-let draw_enemy (x,y) =
-  fill_rect x y 25 25;
-;;
-
-let rec draw_all_enemies enemy_list i =
-  if i < (List.length enemy_list) then
-    (Thread.create draw_enemy (List.nth enemy_list i))::draw_all_enemies enemy_list (i+1)
-    else []
-;;
 
 let draw_world state =
+  auto_synchronize false;
   clear_graph ();
-  fill_rect (fst state.player) (snd state.player) 50 25;
-  let l = (draw_all_enemies state.enemies 0) in
-    List.iter (fun i -> Thread.join i) l
-  
-;;
-
-let draw_player (x,y) = 
-  set_color white;
-  fill_rect 0 0 1000 100;
-  set_color black;
-  fill_rect x y 50 25;
+  fill_rect (fst state.player) (snd state.player) 100 100;
+  List.iter (fun (x, y) -> fill_rect x y 25 25) state.enemies;
+  List.iter (fun (x, y) -> fill_rect x y 5 10) state.bullets;
+  synchronize ();
 ;;
 
 let enemy_far_right enemy_list =
@@ -57,55 +45,62 @@ let enemy_far_right enemy_list =
     List.hd (List.rev list)
 ;;
 
-let update_enemies enemy_list  =
+let update_enemies state dt =
+  if state.enemy_delay > state.enemy_speed then
+    { state with enemies = List.map (if fst (enemy_far_right state.enemies) >= 800 then
+                                      (fun (x,y) -> ((x-200) , y-70)) 
+                                    else 
+                                      (fun (x,y) ->((x+50), y))) state.enemies;
+                 enemy_delay = 0.0 }
+  else
+    { state with enemy_delay = state.enemy_delay +. dt }
 
-    List.map (if fst(enemy_far_right enemy_list) >= 800 
-                              then  (fun (x,y) -> ((x-200) , y-70)) 
-                                
-                              else (fun (x,y) ->((x+50), y)) ) enemy_list
-
+let update_bullets state dt =
+  if state.bullet_delay > state.bullet_speed then
+    { state with bullets = List.map (fun (x, y) -> (x, y + 10)) state.bullets;
+                 bullet_delay = 0.0 }
+  else
+    { state with bullet_delay = state.bullet_delay +. dt }
+    
 ;;
 
-
-let update_bullets bullets =
-  List.map (fun (x, y) -> (x, y + 5)) bullets
+let update_state state dt =
+  let state' = update_enemies state dt in
+  let state' = update_bullets state' dt in
+  state'
 ;;
 
-let update_state state =
-let enemies' = update_enemies state.enemies in
-let bullets' = update_bullets state.bullets in
-{ state with enemies = enemies'; bullets = bullets' }
-;;
+let fire_bullet state =
+  let bullet = state.player in
+  { state with bullets = List.append state.bullets [bullet] }
 
 let rec handler state old_time =
-  
-  draw_player state.player;
+  draw_world state;
 
   let new_time = get_time_now () in
-  let update = (new_time -. old_time) > speed_enemy in
-    let time' = if update then new_time else old_time in
-    let state' = if update then
-                  update_state state 
-                else
-                  state in
-
-    if update then (draw_world state);
+  let delta_time = 0.0001 in
+  let new_state = update_state state delta_time in
 
   let event = Graphics.wait_next_event [ Graphics.Poll ] in
-    if event.Graphics.keypressed then 
+    if event.Graphics.keypressed then
       match (read_key ()) with
-      |'a' -> handler { state' with player = ((fst state'.player) - 20, snd state'.player) } time'
-      |'d' -> handler { state' with player = ((fst state'.player) + 20, snd state'.player) } time'
-      | _ -> handler state' time'
+      |'a' -> handler { new_state with player = ((fst new_state.player) - 20, snd new_state.player) } new_time
+      |'d' -> handler { new_state with player = ((fst new_state.player) + 20, snd new_state.player) } new_time
+      |' ' -> handler (fire_bullet new_state) new_time
+      | _ -> handler new_state new_time
     else
-      handler state' time'
+      handler new_state new_time
 ;;
 
 loop_at_exit [Key_pressed ; Button_down]
    (fun event ->
       handler { 
-          player = (300,25);
+          player = (300,100);
           enemies = build_enemies enemies_row enemies_line;
-          bullets = [ (150, 150) ]
+          bullets = [ (150, 150) ];
+          enemy_delay = 0.0;
+          bullet_delay = 0.0;
+          enemy_speed = 0.5;
+          bullet_speed = 0.01;
         } 0.0)
 ;;
