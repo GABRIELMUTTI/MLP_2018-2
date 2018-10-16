@@ -1,6 +1,14 @@
 open Graphics;;
 open Printf;;
 open StdLabels;;
+
+type game_state =
+{
+  player : int * int;
+  enemies : (int * int) list;
+  bullets : (int * int) list;
+}
+
 let enemys_line = 4;;
 let enemys_row = 8;;
 open_graph " 900x600";;
@@ -16,10 +24,10 @@ let get_time_now () =
   Unix.time ()
 ;;
 
-let draw_world ~player:(x,y) ~enemy:enemy_list =
+let draw_world state =
   clear_graph ();
-  fill_rect x y 100 100;
-  List.iter (fun (x2,y2) -> fill_rect x2 y2 25 25) enemy_list;
+  fill_rect (fst state.player) (snd state.player) 100 100;
+  List.iter (fun (x, y) -> fill_rect x y 25 25) state.enemies;
 ;;
 
 let enemy_far_right enemy_list =
@@ -27,37 +35,48 @@ let enemy_far_right enemy_list =
     List.hd (List.rev list)
 ;;
 
-let update_enemys ~enemy:enemy_list old_time new_time =
-  if (new_time -. old_time) > 0.5 then
-    List.map (if fst(enemy_far_right enemy_list) >= 800 
-                              then  (fun (x,y) -> ((x-200) , y-70)) 
-                                
-                              else (fun (x,y) ->((x+50), y))) enemy_list
-  else
-    enemy_list
+
+let update_enemies enemies =
+  List.map (if fst (enemy_far_right enemies) >= 800 then
+              (fun (x,y) -> ((x-200) , y-70)) 
+            else 
+              (fun (x,y) ->((x+50), y))) enemies
 ;;
 
-let rec handler ~player:(x,y) ~enemy:enemy_list old_time =
-  
-  draw_world ~player:(x,y) ~enemy:enemy_list;
+let update_bullets bullets =
+    List.map (fun (x, y) -> (x, y + 5)) bullets
+;;
+
+let update_state state =
+  let enemies' = update_enemies state.enemies in
+  let bullets' = update_bullets state.bullets in
+  { state with enemies = enemies'; bullets = bullets' }
+;;
+
+let rec handler state old_time =
+  draw_world state;
 
   let new_time = get_time_now () in
-    let enemy' = update_enemys ~enemy:enemy_list old_time new_time in
-    let time' = if (new_time -. old_time) > 0.5 then new_time else old_time in
-
+  let state' = if ((new_time -. old_time) > 0.5) then
+                 update_state state
+               else
+                 state in
+    
   let event = Graphics.wait_next_event [ Graphics.Poll ] in
     if event.Graphics.keypressed then
       match (read_key ()) with
-      |'a' -> handler ~player:((x-20),y) ~enemy:enemy' time'
-      |'d' -> handler ~player:((x+20),y) ~enemy:enemy' time'
-      |'q' -> handler ~player:(300,100) ~enemy:enemy' time'
-      | _ -> handler ~player:(x,y) ~enemy:enemy' time'
+      |'a' -> handler { state' with player = ((fst state'.player) - 20, snd state'.player) } new_time
+      |'d' -> handler { state' with player = ((fst state'.player) + 20, snd state'.player) } new_time
+      | _ -> handler state' new_time
     else
-      handler ~player:(x,y) ~enemy:enemy' time'
-  
+      handler state' new_time
 ;;
 
 loop_at_exit [Key_pressed ; Button_down]
    (fun event ->
-      handler ~player:(300,100) ~enemy:(build_enemys enemys_row enemys_line) 0.0)
+      handler { 
+          player = (300,100);
+          enemies = build_enemys enemys_row enemys_line;
+          bullets = [ (150, 150) ]
+        } 0.0)
 ;;
