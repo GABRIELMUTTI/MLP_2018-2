@@ -43,7 +43,7 @@ let rec handler ~player:(x,y) ~enemy:enemy_list old_time =
 
   let new_time = get_time_now () in
     let enemy' = update_enemys ~enemy:enemy_list old_time new_time in
-    let time' = if (new_time -. old_time) > 0.1 then new_time else old_time in
+    let time' = if (new_time -. old_time) > 0.5 then new_time else old_time in
 
   let event = Graphics.wait_next_event [ Graphics.Poll ] in
     if event.Graphics.keypressed then
