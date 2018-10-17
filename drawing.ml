@@ -33,7 +33,7 @@ let draw_bullet (x,y) =
 ;;
 
 let draw_enemy_bullets bullet_list = 
-  set_color(rgb 125 125 125);
+  set_color red;
   List.iter (fun cord -> draw_bullet cord ) bullet_list
 ;;
 
@@ -45,7 +45,9 @@ let draw_world state =
   set_color (rgb 201 140 0);
   fill_rect (snd _player_boundaries) (snd _initial_player_pos) 10 10;
   fill_rect ((fst _player_boundaries)-10)  (snd _initial_player_pos) 10 10;
-  
+  moveto 0 _game_over_line;
+  set_color cyan;
+  lineto 900 _game_over_line; 
   draw_player state.player;
   set_color green;
   draw_all_enemies state.enemies;

@@ -5,6 +5,7 @@
 (*** GAME CONTROL AND DESIGN "CONSTANTS" ***)
 
 let _screen_size = (900, 600);;
+let _game_over_line = 100;;
 
     (* player *)
 let _initial_player_pos = (300,25);;
@@ -23,11 +24,11 @@ let _enemies_rows = 8;;
 let _enemy_speed = 0.2;;
 let _enemy_size = (27,25);;
 let _enemy_step_distance = 20;;
-let _enemy_downstep_distance = 30;;
+let _enemy_downstep_distance = 10;;
 let _enemy_area_border = (20,870) ;;
 let _first_enemy_pos = (20, 550);;
 let _space_between_enemies = ((fst _enemy_size)+45, (snd _enemy_size)+25);;
-let _enemy_firerate = 0.01;;
+let _enemy_firerate = 1.0;;
                       
 
 (*** TYPES ***)
@@ -45,4 +46,5 @@ type game_state =
     enemy_bullets : (int * int) list;
     enemy_bullet_delay : float;
     enemy_fire_delay : float;
+    game_over : bool;
   }

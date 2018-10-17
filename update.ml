@@ -121,6 +121,11 @@ let fire_enemy_bullet state dt =
     { state with enemy_fire_delay = state.enemy_fire_delay +. dt }
 ;;    
 
+let check_game_over state =
+  if ((snd (enemy_far_down state.enemies)) <= _game_over_line )then 
+    {state with game_over = true}
+    else state
+;;
 
 let update_state state dt =
   let state' = if state.enemy_direction then update_enemies_right state dt 
@@ -131,7 +136,8 @@ let update_state state dt =
   let state5' = clear_bullets_out_of_screen state4' in
   let state6' = fire_enemy_bullet state5' dt in
   let state7'= update_enemy_bullets state6' dt in
-  state7'
+  let state8' = check_game_over state7' in
+  state8'
 ;;
 
 let fire_bullet state =

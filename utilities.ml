@@ -24,3 +24,7 @@ let enemy_far_left enemy_list =
     List.hd list
 ;;
 
+let enemy_far_down enemy_list =
+  let list = List.sort (fun (x,y) (x2,y2) -> compare y y2) enemy_list in
+    List.hd list
+;;
