@@ -4,8 +4,8 @@ open Utilities;;
 open Drawing;;
 open Config;;
 open Thread;;
-(*** OPEN WINDOW***)
-open_graph " 900x600";;
+
+
 
 
 
@@ -18,6 +18,11 @@ open_graph " 900x600";;
 
 
 (*** MAIN FUNCTIONS ***)
+let  initial_screen ()  = 
+  draw_initial_screen ();
+  ignore(Graphics.wait_next_event [ Key_pressed ]);
+  ;;
+
 let rec mainloop state old_time =
 
   let new_time = get_time_now () in
@@ -38,6 +43,9 @@ let rec mainloop state old_time =
 ;;
 
 let  main () = 
+
+  open_graph " 900x600";
+  initial_screen ();
   mainloop { 
     player = _initial_player_pos;
     enemies = build_enemies 0 0;
@@ -47,9 +55,11 @@ let  main () =
     enemy_speed = _enemy_speed;
     bullet_speed = _bullet_speed;
     enemy_direction = true;
+    
   } 0.0;
   close_graph ()
 ;;
+
 let _ = main ();;
 
 

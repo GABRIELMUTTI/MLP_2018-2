@@ -38,4 +38,5 @@ type game_state =
     enemy_speed : float;
     bullet_speed : float;
     enemy_direction : bool;
+  
   }

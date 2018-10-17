@@ -1,4 +1,4 @@
-SpaceInvaders: SpaceInvaders.ml
+SpaceInvaders: config.ml utilities.ml drawing.ml update.ml SpaceInvaders.ml
 	ocamlfind ocamlopt -I +threads -o SpaceInvaders  graphics.cmxa unix.cmxa threads.cmxa config.ml utilities.ml drawing.ml update.ml SpaceInvaders.ml 
 
 run: SpaceInvaders

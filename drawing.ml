@@ -30,3 +30,11 @@ let draw_world state =
   
   synchronize ();
 ;;
+
+let draw_initial_screen () =
+  set_color black;
+  fill_rect 0 0 900 600;
+  moveto 390 300;
+  set_color white;
+  draw_string "PRESS ANY KEY TO START";
+;;
