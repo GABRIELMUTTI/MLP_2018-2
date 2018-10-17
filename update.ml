@@ -94,6 +94,33 @@ let check_player_boundaries state =
             state
 ;;
 
+let update_enemy_bullets state dt =
+  if state.enemy_bullet_delay > _bullet_speed then
+    { state with
+      enemy_bullets = List.map
+                        (fun (bx, by) -> (bx, by - _bullet_step_distance))
+                        state.enemy_bullets;
+      enemy_bullet_delay = 0.0;
+    }
+  else
+    { state with enemy_bullet_delay = state.enemy_bullet_delay +. dt }
+  
+;;
+
+let select_random_enemy enemies =
+  let random_index = Random.int ((List.length enemies) - 1) in
+  List.nth enemies random_index
+;;
+
+let fire_enemy_bullet state dt =
+  if state.enemy_fire_delay > _enemy_firerate then
+    let enemy = select_random_enemy state.enemies in
+    let bullets' = List.cons enemy state.enemy_bullets in
+    { state with enemy_bullets = bullets'; enemy_fire_delay = 0.0 }
+  else
+    { state with enemy_fire_delay = state.enemy_fire_delay +. dt }
+;;    
+
 
 let update_state state dt =
   let state' = if state.enemy_direction then update_enemies_right state dt 
@@ -102,7 +129,9 @@ let update_state state dt =
   let state3' = check_player_boundaries state2' in
   let state4' = check_bullet_enemy_collision state3' in
   let state5' = clear_bullets_out_of_screen state4' in
-  state5'
+  let state6' = fire_enemy_bullet state5' dt in
+  let state7'= update_enemy_bullets state6' dt in
+  state7'
 ;;
 
 let fire_bullet state =

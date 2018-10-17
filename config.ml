@@ -27,7 +27,8 @@ let _enemy_downstep_distance = 30;;
 let _enemy_area_border = (20,870) ;;
 let _first_enemy_pos = (20, 550);;
 let _space_between_enemies = ((fst _enemy_size)+45, (snd _enemy_size)+25);;
-
+let _enemy_firerate = 0.01;;
+                      
 
 (*** TYPES ***)
 type game_state =
@@ -41,5 +42,7 @@ type game_state =
     bullet_speed : float;
     enemy_direction : bool;
     bullet_on : bool;
-  
+    enemy_bullets : (int * int) list;
+    enemy_bullet_delay : float;
+    enemy_fire_delay : float;
   }

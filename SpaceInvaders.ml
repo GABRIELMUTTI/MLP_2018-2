@@ -56,6 +56,9 @@ let  main () =
     enemy_speed = _enemy_speed;
     bullet_speed = _bullet_speed;
     enemy_direction = true;
+    enemy_bullets = [];
+    enemy_bullet_delay = 0.0;
+    enemy_fire_delay = 0.0;
     
   } 0.0;
   close_graph ()
