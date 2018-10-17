@@ -27,6 +27,16 @@ let draw_player (x,y) =
   fill_rect x (y+12) 15 13;
   fill_rect (x + ((fst _player_size) - 15)) (y+12) 15 13;
 ;;
+
+let draw_bullet (x,y) = 
+  fill_rect x y (fst _bullet_size) (snd _bullet_size);
+;;
+
+let draw_enemy_bullets bullet_list = 
+  set_color(rgb 125 125 125);
+  List.iter (fun cord -> draw_bullet cord ) bullet_list
+;;
+
 let draw_world state =
   auto_synchronize false;
   clear_graph ();
@@ -41,6 +51,7 @@ let draw_world state =
   draw_all_enemies state.enemies;
   set_color (rgb 125 125 125);
   if state.bullet_on then fill_rect (fst state.bullet) (snd state.bullet) (fst _bullet_size) (snd _bullet_size) ;
+  draw_enemy_bullets state.enemy_bullets;
   
   synchronize ();
 ;;
