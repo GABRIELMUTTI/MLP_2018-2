@@ -35,7 +35,12 @@ let check_bullet_enemy_collision state =
 
 
 
-    
+let clear_bullets_out_of_screen state =
+  let (bx, by) = state.bullet in
+  if by > snd _screen_size then
+    { state with bullet_on = false; bullet_delay = 0.0 }
+  else
+    state
 
 
 (*** UPDATE FUNCTIONS ***)
@@ -96,7 +101,8 @@ let update_state state dt =
   let state2' = if state.bullet_on then update_bullet state' dt else state' in
   let state3' = check_player_boundaries state2' in
   let state4' = check_bullet_enemy_collision state3' in
-  state4'
+  let state5' = clear_bullets_out_of_screen state4' in
+  state5'
 ;;
 
 let fire_bullet state =

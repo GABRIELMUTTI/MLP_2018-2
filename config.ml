@@ -4,6 +4,8 @@
 
 (*** GAME CONTROL AND DESIGN "CONSTANTS" ***)
 
+let _screen_size = (900, 600);;
+
     (* player *)
 let _initial_player_pos = (300,25);;
 let _player_size = (50,25);;
