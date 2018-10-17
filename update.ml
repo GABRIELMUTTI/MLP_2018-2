@@ -2,7 +2,34 @@ open Config;;
 open Utilities;;
 
 
+let check_collision (bx, by) (ex, ey) =
+  if bx + (fst _bullet_size) >= ex &&
+       bx <= ex + (fst _enemy_size) &&
+         by + (snd _bullet_size) >= ey &&
+           by <= ey + (snd _enemy_size) then
+    true
+  else
+    false
+;;
 
+let check_bullet_enemy_collision state =
+  let rec aux_loop enemies =
+    match enemies with
+    | [] -> (false, [])
+    | hd :: tl ->
+       if check_collision state.bullet hd then
+         (true, tl)
+       else
+         let (hit', enemies') = aux_loop tl in
+         (hit', List.cons hd enemies')
+  in
+  let (hit, final_enemies) = aux_loop state.enemies in
+  if hit then
+    { state with bullet_on = false; enemies = final_enemies; bullet_delay = 0.0 }
+  else
+    state
+;;            
+    
 
 
 (*** UPDATE FUNCTIONS ***)
@@ -62,7 +89,8 @@ let update_state state dt =
                else update_enemies_left state dt in
   let state2' = if state.bullet_on then update_bullet state' dt else state' in
   let state3' = check_player_boundaries state2' in
-  state3'
+  let state4' = check_bullet_enemy_collision state3' in
+  state4'
 ;;
 
 let fire_bullet state =
