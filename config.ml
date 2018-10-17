@@ -32,11 +32,12 @@ type game_state =
   {
     player : int * int;
     enemies : (int * int) list;
-    bullets : (int * int) list;
+    bullet : int * int;
     enemy_delay : float;
     bullet_delay : float;
     enemy_speed : float;
     bullet_speed : float;
     enemy_direction : bool;
+    bullet_on : bool;
   
   }

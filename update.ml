@@ -38,9 +38,9 @@ let update_enemies_left state dt =
     { state with enemy_delay = state.enemy_delay +. dt }
 ;;
 
-let update_bullets state dt =
+let update_bullet state dt =
   if state.bullet_delay > state.bullet_speed then
-    { state with bullets = List.map (fun (x, y) -> (x, y + _bullet_step_distance)) state.bullets;
+    { state with bullet = ((fst state.bullet), (snd state.bullet) + _bullet_step_distance);
                  bullet_delay = 0.0 }
   else
     { state with bullet_delay = state.bullet_delay +. dt }
@@ -60,12 +60,17 @@ let check_player_boundaries state =
 let update_state state dt =
   let state' = if state.enemy_direction then update_enemies_right state dt 
                else update_enemies_left state dt in
-  let state2' = update_bullets state' dt in
+  let state2' = if state.bullet_on then update_bullet state' dt else state' in
   let state3' = check_player_boundaries state2' in
   state3'
 ;;
 
 let fire_bullet state =
-  let bullet = state.player in
-  { state with bullets = List.append state.bullets [bullet] }
+  if state.bullet_on then
+    state
+  else
+    let bullet = state.player in
+    { state with bullet = bullet;bullet_on = true }
+  
+  
 ;;

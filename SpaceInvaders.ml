@@ -49,7 +49,8 @@ let  main () =
   mainloop { 
     player = _initial_player_pos;
     enemies = build_enemies 0 0;
-    bullets = [];
+    bullet = (0,0);
+    bullet_on = false;
     enemy_delay = 0.0;
     bullet_delay = 0.0;
     enemy_speed = _enemy_speed;

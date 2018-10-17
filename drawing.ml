@@ -26,7 +26,7 @@ let draw_world state =
   set_color green;
   draw_all_enemies state.enemies;
   set_color (rgb 125 125 125);
-  List.iter (fun (x, y) -> fill_rect x y (fst _bullet_size) (snd _bullet_size)) state.bullets;
+  if state.bullet_on then fill_rect (fst state.bullet) (snd state.bullet) (fst _bullet_size) (snd _bullet_size) ;
   
   synchronize ();
 ;;
