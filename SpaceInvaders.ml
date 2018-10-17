@@ -1,170 +1,20 @@
 open Graphics;;
-open Printf;;
+open Update;;
+open Utilities;;
+open Drawing;;
+open Config;;
 open Thread;;
-
-(*** GAME CONTROL AND DESIGN "CONSTANTS" ***)
-
-    (* player *)
-let _initial_player_pos = (300,25);;
-let _player_size = (50,25);;
-let _player_step_distance = 20;;
-let _player_boundaries = (20,870);;
-
-    (* bullet *)
-let _bullet_speed = 0.05;;
-let _bullet_size = (5,10);;
-let _bullet_step_distance = 10;;
-
-    (* enemy *)
-let _enemies_lines = 4;;
-let _enemies_rows = 8;;
-let _enemy_speed = 0.2;;
-let _enemy_size = (25,25);;
-let _enemy_step_distance = 20;;
-let _enemy_downstep_distance = 30;;
-let _enemy_area_border = (20,870) ;;
-let _first_enemy_pos = (20, 550);;
-let _space_between_enemies = ((fst _enemy_size)+45, (snd _enemy_size)+25);;
-
-
 (*** OPEN WINDOW***)
 open_graph " 900x600";;
 
 
-(*** TYPES ***)
-type game_state =
-{
-  player : int * int;
-  enemies : (int * int) list;
-  bullets : (int * int) list;
-  enemy_delay : float;
-  bullet_delay : float;
-  enemy_speed : float;
-  bullet_speed : float;
-  enemy_direction : bool;
-}
-
-
-(*** UTILITIES FUNCTIONS ***)
-let rec build_enemies i k = 
-  if i = _enemies_rows
-    then if k = _enemies_lines
-          then []
-          else (build_enemies 0 (k + 1))
-    else ((fst _first_enemy_pos) + (fst _space_between_enemies)*i,
-          (snd _first_enemy_pos)-(snd _space_between_enemies)*k)::build_enemies (i+1) k
-;;
-
-let get_time_now () = 
-  Unix.gettimeofday ()
-;;
-
-let enemy_far_right enemy_list =
-  let list = List.sort (fun (x,y) (x2,y2) -> compare x x2) enemy_list in
-    List.hd (List.rev list)
-;;
-
-let enemy_far_left enemy_list =
-  let list = List.sort (fun (x,y) (x2,y2) -> compare x x2) enemy_list in
-    List.hd list
-;;
 
 
 
-(*** DRAWING FUNCTIONS***)
-
-let draw_enemy (x,y) =
-  fill_rect x y (fst _enemy_size) (snd _enemy_size);
-;;
-
-let rec draw_all_enemies enemy_list =
-  List.iter (fun i -> Thread.join i)
-    (List.map (fun e -> Thread.create draw_enemy e ) enemy_list)   
-;;
-
-let draw_world state =
-  auto_synchronize false;
-  clear_graph ();
-  set_color black;
-  fill_rect 0 0 900 600;
-  set_color (rgb 201 140 0);
-  fill_rect (snd _player_boundaries) (snd _initial_player_pos) 10 10;
-  fill_rect ((fst _player_boundaries)-10)  (snd _initial_player_pos) 10 10;
-  set_color white;
-  fill_rect (fst state.player) (snd state.player) (fst _player_size) (snd _player_size);
-  set_color green;
-  draw_all_enemies state.enemies;
-  set_color (rgb 125 125 125);
-  List.iter (fun (x, y) -> fill_rect x y (fst _bullet_size) (snd _bullet_size)) state.bullets;
-  
-  synchronize ();
-;;
 
 
-(*** UPDATE FUNCTIONS ***)
-let update_enemies_right state dt =
-  if state.enemy_delay > state.enemy_speed then
-    if (fst (enemy_far_right state.enemies) + (fst _enemy_size)) >= (snd _enemy_area_border) then
-      { state with
-        enemies = List.map (fun (x,y) ->(x, (y - _enemy_downstep_distance))) state.enemies;
-        enemy_direction = false;
-        enemy_delay = 0.0}
-    else
-      { state with 
-        enemies = List.map (fun (x,y) ->((x + _enemy_step_distance), y)) state.enemies;
-        enemy_delay = 0.0 }
-
-  else
-    { state with enemy_delay = state.enemy_delay +. dt }
-;;
-
-let update_enemies_left state dt =
-  if state.enemy_delay > state.enemy_speed then
-    if (fst (enemy_far_left state.enemies)) <= (fst _enemy_area_border) then
-      { state with
-        enemies = List.map (fun (x,y) ->(x, (y - _enemy_downstep_distance))) state.enemies;
-        enemy_direction = true;
-        enemy_delay = 0.0}
-    else
-      { state with 
-        enemies = List.map (fun (x,y) ->((x - _enemy_step_distance), y)) state.enemies;
-        enemy_delay = 0.0 }
-
-  else
-    { state with enemy_delay = state.enemy_delay +. dt }
-;;
-
-let update_bullets state dt =
-  if state.bullet_delay > state.bullet_speed then
-    { state with bullets = List.map (fun (x, y) -> (x, y + _bullet_step_distance)) state.bullets;
-                 bullet_delay = 0.0 }
-  else
-    { state with bullet_delay = state.bullet_delay +. dt }
-    
-;;
-let check_player_boundaries state =
-  let player_pos = state.player in
-    if (fst player_pos) < (fst _player_boundaries) then
-      { state with player = ( (fst _player_boundaries), (snd player_pos))}
-    else if ((fst player_pos)+(fst _player_size)) > (snd _player_boundaries) then
-            { state with player = ( ((snd _player_boundaries)-(fst _player_size)), (snd player_pos))}
-         else
-            state
-;;
 
 
-let update_state state dt =
-  let state' = if state.enemy_direction then update_enemies_right state dt 
-               else update_enemies_left state dt in
-  let state2' = update_bullets state' dt in
-  let state3' = check_player_boundaries state2' in
-  state3'
-;;
-
-let fire_bullet state =
-  let bullet = state.player in
-  { state with bullets = List.append state.bullets [bullet] }
-;;
 
 
 (*** MAIN FUNCTIONS ***)
