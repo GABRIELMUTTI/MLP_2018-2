@@ -59,9 +59,23 @@ let draw_world state =
 ;;
 
 let draw_initial_screen () =
+  auto_synchronize false;
+  clear_graph ();
   set_color black;
   fill_rect 0 0 900 600;
   moveto 390 300;
   set_color white;
   draw_string "PRESS ANY KEY TO START";
+  synchronize ();
+;;
+
+let draw_game_over_screen () =
+  auto_synchronize false;
+  clear_graph ();
+  set_color red;
+  fill_rect 0 0 900 600;
+  moveto 360 300;
+  set_color black;
+  draw_string "GAME OVER PRESS ANY KEY TO EXIT";
+  synchronize ();
 ;;
