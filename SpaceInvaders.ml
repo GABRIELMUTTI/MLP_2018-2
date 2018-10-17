@@ -1,6 +1,5 @@
 open Graphics;;
 open Printf;;
-open StdLabels;;
 open Thread;;
 
 (*** GAME CONTROL AND DESIGN "CONSTANTS" ***)
@@ -9,6 +8,7 @@ open Thread;;
 let _initial_player_pos = (300,25);;
 let _player_size = (50,25);;
 let _player_step_distance = 20;;
+let _player_boundaries = (20,870);;
 
     (* bullet *)
 let _bullet_speed = 0.001;;
@@ -134,12 +134,23 @@ let update_bullets state dt =
     { state with bullet_delay = state.bullet_delay +. dt }
     
 ;;
+let check_player_boundaries state =
+  let player_pos = state.player in
+    if (fst player_pos) < (fst _player_boundaries) then
+      { state with player = ( (fst _player_boundaries), (snd player_pos))}
+    else if ((fst player_pos)+(fst _player_size)) > (snd _player_boundaries) then
+            { state with player = ( ((snd _player_boundaries)-(fst _player_size)), (snd player_pos))}
+         else
+            state
+;;
+
 
 let update_state state dt =
   let state' = if state.enemy_direction then update_enemies_right state dt 
                else update_enemies_left state dt in
-  let state' = update_bullets state' dt in
-  state'
+  let state2' = update_bullets state' dt in
+  let state3' = check_player_boundaries state2' in
+  state3'
 ;;
 
 let fire_bullet state =
@@ -150,11 +161,12 @@ let fire_bullet state =
 
 (*** MAIN FUNCTIONS ***)
 let rec mainloop state old_time =
-  draw_world state;
 
   let new_time = get_time_now () in
   let delta_time = 0.0001 in
   let new_state = update_state state delta_time in
+
+  draw_world state;
 
   let event = Graphics.wait_next_event [ Graphics.Poll ] in
     if event.Graphics.keypressed then
