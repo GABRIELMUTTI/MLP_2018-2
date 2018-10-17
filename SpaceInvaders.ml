@@ -11,14 +11,14 @@ let _player_size = (50,25);;
 let _player_step_distance = 20;;
 
     (* bullet *)
-let _bullet_speed = 0.01;;
+let _bullet_speed = 0.001;;
 let _bullet_size = (5,10);;
 let _bullet_step_distance = 10;;
 
     (* enemy *)
 let _enemies_lines = 4;;
 let _enemies_rows = 8;;
-let _enemy_speed = 0.1;;
+let _enemy_speed = 0.01;;
 let _enemy_size = (25,25);;
 let _enemy_step_distance = 20;;
 let _enemy_downstep_distance = 30;;
@@ -72,12 +72,23 @@ let enemy_far_left enemy_list =
 
 
 (*** DRAWING FUNCTIONS***)
+
+let draw_enemy (x,y) =
+  fill_rect x y (fst _enemy_size) (snd _enemy_size);
+;;
+
+let rec draw_all_enemies enemy_list =
+  List.iter (fun i -> Thread.join i)
+    (List.map (fun e -> Thread.create draw_enemy e ) enemy_list)   
+;;
+
 let draw_world state =
   auto_synchronize false;
   clear_graph ();
   fill_rect (fst state.player) (snd state.player) (fst _player_size) (snd _player_size);
-  List.iter (fun (x, y) -> fill_rect x y (fst _enemy_size) (snd _enemy_size)) state.enemies;
+  draw_all_enemies state.enemies;
   List.iter (fun (x, y) -> fill_rect x y (fst _bullet_size) (snd _bullet_size)) state.bullets;
+  
   synchronize ();
 ;;
 
