@@ -5,7 +5,15 @@ open Thread;;
 (*** DRAWING FUNCTIONS***)
 
 let draw_enemy (x,y) =
+  set_color green;
   fill_rect x y (fst _enemy_size) (snd _enemy_size);
+  set_color black;
+  fill_rect (x+5) (y+15) 6 6;
+  fill_rect (x+17) (y+15) 6 6;
+  fill_rect (x) y 2 6;
+  fill_rect (x+25) y 2 6;
+  fill_rect (x+7) y 4 6;
+  fill_rect (x+16) y 4 6;
 ;;
 
 let rec draw_all_enemies enemy_list =
