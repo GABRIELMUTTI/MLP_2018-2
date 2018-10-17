@@ -11,14 +11,14 @@ let _player_step_distance = 20;;
 let _player_boundaries = (20,870);;
 
     (* bullet *)
-let _bullet_speed = 0.001;;
+let _bullet_speed = 0.05;;
 let _bullet_size = (5,10);;
 let _bullet_step_distance = 10;;
 
     (* enemy *)
 let _enemies_lines = 4;;
 let _enemies_rows = 8;;
-let _enemy_speed = 0.01;;
+let _enemy_speed = 0.2;;
 let _enemy_size = (25,25);;
 let _enemy_step_distance = 20;;
 let _enemy_downstep_distance = 30;;
@@ -56,7 +56,7 @@ let rec build_enemies i k =
 ;;
 
 let get_time_now () = 
-  Unix.time ()
+  Unix.gettimeofday ()
 ;;
 
 let enemy_far_right enemy_list =
@@ -171,7 +171,7 @@ let fire_bullet state =
 let rec mainloop state old_time =
 
   let new_time = get_time_now () in
-  let delta_time = 0.0001 in
+  let delta_time = new_time -. old_time in
   let new_state = update_state state delta_time in
 
   draw_world state;
