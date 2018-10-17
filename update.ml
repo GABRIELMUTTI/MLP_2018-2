@@ -109,7 +109,7 @@ let fire_bullet state =
   if state.bullet_on then
     state
   else
-    let bullet = state.player in
+    let bullet =( ((fst state.player) + 22 ), ((snd state.player) + (snd _player_size))) in
     { state with bullet = bullet;bullet_on = true }
   
   

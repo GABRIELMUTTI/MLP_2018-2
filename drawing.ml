@@ -20,7 +20,13 @@ let rec draw_all_enemies enemy_list =
   List.iter (fun i -> Thread.join i)
     (List.map (fun e -> Thread.create draw_enemy e ) enemy_list)   
 ;;
-
+let draw_player (x,y) =
+  set_color white;
+  fill_rect x y (fst _player_size) (snd _player_size);
+  set_color black;
+  fill_rect x (y+12) 15 13;
+  fill_rect (x + ((fst _player_size) - 15)) (y+12) 15 13;
+;;
 let draw_world state =
   auto_synchronize false;
   clear_graph ();
@@ -29,8 +35,8 @@ let draw_world state =
   set_color (rgb 201 140 0);
   fill_rect (snd _player_boundaries) (snd _initial_player_pos) 10 10;
   fill_rect ((fst _player_boundaries)-10)  (snd _initial_player_pos) 10 10;
-  set_color white;
-  fill_rect (fst state.player) (snd state.player) (fst _player_size) (snd _player_size);
+  
+  draw_player state.player;
   set_color green;
   draw_all_enemies state.enemies;
   set_color (rgb 125 125 125);
