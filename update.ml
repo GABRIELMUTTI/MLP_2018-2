@@ -3,11 +3,11 @@ open Utilities;;
 
 
 (* COLLISION*)
-let check_collision (bx, by) (ex, ey) =
-  if bx + (fst _bullet_size) >= ex &&
-       bx <= ex + (fst _enemy_size) &&
-         by + (snd _bullet_size) >= ey &&
-           by <= ey + (snd _enemy_size) then
+let check_collision (bx, by) (ex, ey) size =
+  if bx + (fst size) >= ex &&
+       bx <= ex + (fst size) &&
+         by + (snd size) >= ey &&
+           by <= ey + (snd size) then
     true
   else
     false
@@ -18,7 +18,7 @@ let check_bullet_enemy_collision state =
     match enemies with
     | [] -> (false, [])
     | hd :: tl ->
-       if check_collision state.bullet hd then
+       if check_collision state.bullet hd _enemy_size then
          (true, tl)
        else
          let (hit', enemies') = aux_loop tl in
@@ -34,6 +34,21 @@ let check_bullet_enemy_collision state =
     state
 ;;
 
+let rec check_bullets_hit bullet_list player = 
+  
+    match bullet_list with
+    |[] -> []
+    |hd::tl -> if check_collision hd player _player_size then check_bullets_hit tl player  else hd::check_bullets_hit tl player
+    
+
+;;
+
+let check_bullets_player_collision state = 
+  let initial_bullets_len = List.length state.enemy_bullets in
+  let bullets_after = (check_bullets_hit state.enemy_bullets state.player) in
+
+  {state with enemy_bullets = bullets_after;
+              player_life = (state.player_life - (initial_bullets_len - (List.length bullets_after)))};;
 
 
 let clear_bullet_out_of_screen state =
@@ -162,7 +177,8 @@ let update_state state dt =
   let state6' = clear_enemy_bullets_out_of_screen state5' in
   let state7' = update_enemy_bullets state6' dt in
   let state8' = check_game_over state7' in
-  state8'
+  let state9' = check_bullets_player_collision state8' in
+  state9'
 ;;
 
 let fire_bullet state =

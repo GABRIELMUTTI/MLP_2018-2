@@ -12,6 +12,7 @@ let _initial_player_pos = (300,25);;
 let _player_size = (50,25);;
 let _player_step_distance = 20;;
 let _player_boundaries = (20,870);;
+let _player_life = 3;;
 
     (* bullet *)
 let _bullet_speed = 0.05;;
@@ -21,7 +22,7 @@ let _bullet_step_distance = 10;;
     (* enemy *)
 let _enemies_lines = 4;;
 let _enemies_rows = 8;;
-let _enemy_speed = 0.0;;
+let _enemy_speed = 0.2;;
 let _enemy_size = (27,25);;
 let _enemy_step_distance = 20;;
 let _enemy_downstep_distance = 10;;
@@ -46,5 +47,6 @@ type game_state =
     enemy_bullets : (int * int) list;
     enemy_bullet_delay : float;
     enemy_fire_delay : float;
+    player_life : int;
     game_over : bool;
   }

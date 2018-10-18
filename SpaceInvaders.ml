@@ -39,7 +39,7 @@ let rec mainloop state old_time =
   let new_state = update_state state delta_time in
 
   draw_world state;
-  if state.game_over then state
+  if (state.game_over || (state.player_life <= 0)) then {state with game_over=true}
   else
     let event = Graphics.wait_next_event [ Graphics.Poll ] in
       if event.Graphics.keypressed then
@@ -71,6 +71,7 @@ let  main () =
       enemy_bullets = [];
       enemy_bullet_delay = 0.0;
       enemy_fire_delay = 0.0;
+      player_life = _player_life;
       game_over = false;
       
     } 0.0 in
