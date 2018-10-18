@@ -1,7 +1,6 @@
 
 
 
-
 (*** GAME CONTROL AND DESIGN "CONSTANTS" ***)
 
 let _screen_size = (900, 600);;
@@ -13,6 +12,7 @@ let _player_size = (50,25);;
 let _player_step_distance = 20;;
 let _player_boundaries = (20,870);;
 let _player_life = 3;;
+let _hit_flash_speed = 1.0;;
 
     (* bullet *)
 let _bullet_speed = 0.05;;
@@ -48,5 +48,7 @@ type game_state =
     enemy_bullet_delay : float;
     enemy_fire_delay : float;
     player_life : int;
+    hit_flash : bool;
+    hit_flash_delay : float;
     game_over : bool;
   }

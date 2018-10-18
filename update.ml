@@ -46,10 +46,12 @@ let rec check_bullets_hit bullet_list player =
 let check_bullets_player_collision state = 
   let initial_bullets_len = List.length state.enemy_bullets in
   let bullets_after = (check_bullets_hit state.enemy_bullets state.player) in
-
+  if (initial_bullets_len > (List.length bullets_after)) then 
   {state with enemy_bullets = bullets_after;
-              player_life = (state.player_life - (initial_bullets_len - (List.length bullets_after)))};;
-
+              player_life = (state.player_life - (initial_bullets_len - (List.length bullets_after)));
+              hit_flash = true}
+  else state
+;;
 
 let clear_bullet_out_of_screen state =
   let (bx, by) = state.bullet in
@@ -154,6 +156,17 @@ let fire_enemy_bullet state dt =
     { state with enemy_fire_delay = state.enemy_fire_delay +. dt }
 ;;    
 
+let check_hit_flash_delay state dt = 
+  if state.hit_flash then 
+    if state.hit_flash_delay > _hit_flash_speed then 
+        {state with hit_flash = false; hit_flash_delay = 0.0}
+    else
+        {state with hit_flash_delay = state.hit_flash_delay +. dt}
+  else
+    state
+;;
+
+
 let check_game_over state =
   if ((snd (enemy_far_down state.enemies)) <= _game_over_line )then 
     {state with game_over = true}
@@ -178,7 +191,8 @@ let update_state state dt =
   let state7' = update_enemy_bullets state6' dt in
   let state8' = check_game_over state7' in
   let state9' = check_bullets_player_collision state8' in
-  state9'
+  let state10' = check_hit_flash_delay state9' dt in
+  state10'
 ;;
 
 let fire_bullet state =
