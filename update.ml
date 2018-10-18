@@ -4,10 +4,10 @@ open Utilities;;
 
 (* COLLISION*)
 let check_collision (bx, by) (ex, ey) size =
-  if bx + (fst size) >= ex &&
-       bx <= ex + (fst size) &&
-         by + (snd size) >= ey &&
-           by <= ey + (snd size) then
+  if bx+2  >= ex &&
+       bx+2 <= ex + (fst size) &&
+         by+5  >= ey &&
+           by+5 <= ey + (snd size) then
     true
   else
     false
