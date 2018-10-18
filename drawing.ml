@@ -37,6 +37,15 @@ let draw_enemy_bullets bullet_list =
   List.iter (fun cord -> draw_bullet cord ) bullet_list
 ;;
 
+let draw_life life = 
+  set_color white;
+  moveto 830 5;
+  draw_string "LIFES : " ;
+  draw_string (string_of_int life);
+;;
+
+
+
 let draw_world state =
   auto_synchronize false;
   clear_graph ();
@@ -48,6 +57,7 @@ let draw_world state =
   moveto 0 _game_over_line;
   set_color cyan;
   lineto 900 _game_over_line; 
+  draw_life state.player_life;
   draw_player state.player;
   set_color green;
   draw_all_enemies state.enemies;
