@@ -21,7 +21,7 @@ let _bullet_step_distance = 10;;
     (* enemy *)
 let _enemies_lines = 4;;
 let _enemies_rows = 8;;
-let _enemy_speed = 0.2;;
+let _enemy_speed = 0.0;;
 let _enemy_size = (27,25);;
 let _enemy_step_distance = 20;;
 let _enemy_downstep_distance = 10;;

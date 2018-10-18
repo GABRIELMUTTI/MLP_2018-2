@@ -76,6 +76,6 @@ let draw_game_over_screen () =
   fill_rect 0 0 900 600;
   moveto 360 300;
   set_color black;
-  draw_string "GAME OVER PRESS ANY KEY TO EXIT";
+  draw_string "GAME OVER PRESS ESC TO EXIT";
   synchronize ();
 ;;

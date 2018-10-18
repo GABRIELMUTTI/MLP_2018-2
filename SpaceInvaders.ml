@@ -23,9 +23,13 @@ let  initial_screen () =
   ignore(Graphics.wait_next_event [ Key_pressed ]);
 ;;
 
-let game_over_screen () =
+let rec game_over_screen () =
+
   draw_game_over_screen ();
-  ignore(Graphics.wait_next_event [ Key_pressed ]);
+  ignore ( Graphics.wait_next_event [ Key_pressed ]);
+  match (read_key ()) with
+  |'\027' -> ()
+  |_ -> game_over_screen ()
 ;;
 
 let rec mainloop state old_time =
