@@ -15,7 +15,7 @@ let _player_life = 3;;
 let _hit_flash_speed = 1.0;;
 
     (* bullet *)
-let _bullet_speed = 0.05;;
+let _bullet_speed = 0.015;;
 let _bullet_size = (5,10);;
 let _bullet_step_distance = 10;;
 

@@ -27,7 +27,10 @@ let check_bullet_enemy_collision state =
   if state.bullet_on then
     let (hit, final_enemies) = aux_loop state.enemies in
     if hit then
-      { state with bullet_on = false; enemies = final_enemies; bullet_delay = 0.0 }
+      { state with bullet_on = false;
+                   enemies = final_enemies;
+                   bullet_delay = 0.0;
+                   enemy_speed = state.enemy_speed *. 0.965; }
     else
       state
   else
