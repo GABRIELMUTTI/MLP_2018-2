@@ -180,8 +180,9 @@ let update_state state dt =
   let state1' = if List.length state.enemies > 0 then
                         (let enemy_state1' = if state.enemy_direction then update_enemies_right state dt 
                                             else update_enemies_left state dt in
-                        let enemy_state2' = fire_enemy_bullet enemy_state1' dt in
-                        enemy_state2')
+                         let enemy_state2' = fire_enemy_bullet enemy_state1' dt in
+                         let enemy_state3' = check_game_over enemy_state2' in
+                         enemy_state3')
                 else
                   state in
                         
@@ -192,10 +193,9 @@ let update_state state dt =
   let state5' = clear_bullet_out_of_screen state4' in
   let state6' = clear_enemy_bullets_out_of_screen state5' in
   let state7' = update_enemy_bullets state6' dt in
-  let state8' = check_game_over state7' in
-  let state9' = check_bullets_player_collision state8' in
-  let state10' = check_hit_flash_delay state9' dt in
-  state10'
+  let state8' = check_bullets_player_collision state7' in
+  let state9' = check_hit_flash_delay state8' dt in
+  state9'
 ;;
 
 let fire_bullet state =
