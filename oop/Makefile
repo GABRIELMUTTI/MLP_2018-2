@@ -1,13 +1,11 @@
-SpaceInvaders: types.ml
-	ocamlfind ocamlopt -I +threads -o SpaceInvaders graphics.cmxa unix.cmxa threads.cmxa types.ml
+compile: SpaceInvaders.ml types.ml config.ml
+	ocamlfind ocamlopt -I +threads -o SpaceInvaders graphics.cmxa unix.cmxa threads.cmxa  config.ml types.ml SpaceInvaders.ml
 
 run: SpaceInvaders
 	./SpaceInvaders -I +threads
 
-git:
-	git add Makefile
-	git add SpaceInvaders.ml
-	git add update.ml
-	git add drawing.ml
-	git add utilities.ml
-	git add config.ml
+
+clean: 
+	rm -rf *.o *~ *.cmx *.cmi
+
+

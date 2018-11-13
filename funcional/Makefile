@@ -11,3 +11,7 @@ git:
 	git add drawing.ml
 	git add utilities.ml
 	git add config.ml
+
+
+clean: 
+	rm -rf *.o *~ *.cmx *.cmi

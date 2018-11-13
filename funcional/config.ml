@@ -15,14 +15,14 @@ let _player_life = 3;;
 let _hit_flash_speed = 1.0;;
 
     (* bullet *)
-let _bullet_speed = 0.015;;
+let _bullet_speed = 0.03;;
 let _bullet_size = (5,10);;
 let _bullet_step_distance = 10;;
 
     (* enemy *)
 let _enemies_lines = 4;;
 let _enemies_rows = 8;;
-let _enemy_speed = 0.2;;
+let _enemy_speed = 0.5;;
 let _enemy_size = (27,25);;
 let _enemy_step_distance = 20;;
 let _enemy_downstep_distance = 10;;
