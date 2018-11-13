@@ -14,6 +14,7 @@ class virtual game_object position = object(self)
   val virtual size : int * int  
   val virtual step_distance : int                      
   method virtual update : unit
+  method virtual draw : unit
                
   method get_position =
     position
@@ -26,6 +27,7 @@ class bullet position = object(self)
   val size = _bullet_size
   val step_distance = _bullet_step_distance
   method update = ()
+  method draw = ()
 end
 
 (* Classe das naves. *)       
@@ -67,6 +69,7 @@ class enemy position = object(self)
   val size = _enemy_size
   val step_distance = _enemy_step_distance
   method update  = ()
+  method draw = ()
 end
                             
 
