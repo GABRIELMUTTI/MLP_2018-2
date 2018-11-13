@@ -37,3 +37,8 @@ let _space_between_enemies = ((fst _enemy_size)+45, (snd _enemy_size)+25);;
 let _enemy_firerate = 1.0;;
                       
 
+(* screen states*)
+let _initial_state = 0;;
+let _ingame_state = 1;;
+let _lose_state = 2;;
+let _win_state = 3;;

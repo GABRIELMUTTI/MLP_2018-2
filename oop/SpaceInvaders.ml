@@ -8,19 +8,25 @@ open Graphics;;
 open Screen;;
 
 
+let  initial_screen screen = 
 
+  screen#draw;
+  ignore(Graphics.wait_next_event [ Key_pressed ]);
+;;
 
 let  main () =
   
   let screen = new screen in
   screen#openW;
-  screen#draw;
 
-  (*   CRIA OBJETOS TELA, PLAYER, INIMIGOS *)
-  let pl = new player {x = 50; y = 50} in
+
+  (*   CRIA OBJETOS PLAYER, INIMIGOS *)
+  let pl = new player {x = 300; y = 50} in
 
   (* TELA INICIAL *)
-
+  initial_screen screen;
+  screen#setState _ingame_state;
+  
   (* LOOP PRINCIPAL *)
   while true do
 
@@ -38,11 +44,15 @@ let  main () =
 
     (* DESENHOS *)
     auto_synchronize false;
+    screen#draw;
     pl#draw;
     synchronize ()
-  done
+  done;
   
   (* TELA FINAL *)
+  screen#draw;
+  ignore(Graphics.wait_next_event [ Key_pressed ]);
+  screen#closeW;
 ;;
 
   
