@@ -1,5 +1,5 @@
-compile: config.ml gameObject.ml bullet.ml ship.ml player.ml enemy.ml SpaceInvaders.ml 
-	ocamlfind ocamlopt -I +threads -o SpaceInvaders graphics.cmxa unix.cmxa threads.cmxa  config.ml gameObject.ml bullet.ml ship.ml player.ml enemy.ml SpaceInvaders.ml 
+compile: config.ml gameObject.ml bullet.ml ship.ml player.ml enemy.ml screen.ml SpaceInvaders.ml 
+	ocamlfind ocamlopt -I +threads -o SpaceInvaders graphics.cmxa unix.cmxa threads.cmxa  config.ml gameObject.ml bullet.ml ship.ml player.ml enemy.ml screen.ml SpaceInvaders.ml 
 
 run: SpaceInvaders
 	./SpaceInvaders -I +threads

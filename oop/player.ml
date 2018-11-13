@@ -22,9 +22,9 @@ class player position = object(self)
 
 
   method draw =  
-    set_color black;
-    fill_rect position.x position.y (fst size) (snd size);
     set_color white;
+    fill_rect position.x position.y (fst size) (snd size);
+    set_color black;
     fill_rect position.x (position.y+12) 15 13;
     fill_rect (position.x + ((fst size) - 15)) (position.y+12) 15 13;
 end

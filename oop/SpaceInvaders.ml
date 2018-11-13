@@ -5,14 +5,17 @@ open Enemy;;
 open Player;;
 open Config;;
 open Graphics;;
-
+open Screen;;
 
 
 
 
 let  main () =
   
-  open_graph " 900x600";
+  let screen = new screen in
+  screen#openW;
+  screen#draw;
+
   (*   CRIA OBJETOS TELA, PLAYER, INIMIGOS *)
   let pl = new player {x = 50; y = 50} in
 
@@ -34,7 +37,9 @@ let  main () =
 
 
     (* DESENHOS *)
+    auto_synchronize false;
     pl#draw;
+    synchronize ()
   done
   
   (* TELA FINAL *)
