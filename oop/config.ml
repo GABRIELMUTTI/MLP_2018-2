@@ -1,4 +1,9 @@
 
+type coords =
+  {
+    x : int;
+    y : int;
+  }
 
 
 (*** GAME CONTROL AND DESIGN "CONSTANTS" ***)
@@ -32,23 +37,3 @@ let _space_between_enemies = ((fst _enemy_size)+45, (snd _enemy_size)+25);;
 let _enemy_firerate = 1.0;;
                       
 
-(*** TYPES ***)
-type game_state =
-  {
-    player : int * int;
-    enemies : (int * int) list;
-    bullet : int * int;
-    enemy_delay : float;
-    bullet_delay : float;
-    enemy_speed : float;
-    bullet_speed : float;
-    enemy_direction : bool;
-    bullet_on : bool;
-    enemy_bullets : (int * int) list;
-    enemy_bullet_delay : float;
-    enemy_fire_delay : float;
-    player_life : int;
-    hit_flash : bool;
-    hit_flash_delay : float;
-    game_over : bool;
-  }
