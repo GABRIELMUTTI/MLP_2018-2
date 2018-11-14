@@ -21,32 +21,37 @@ let  main () =
 
 
   (*   CRIA OBJETOS PLAYER, INIMIGOS *)
-  let pl = new player {x = 300; y = 50} in
+  let player = new player {x = 300; y = 25} in
 
   (* TELA INICIAL *)
   initial_screen screen;
   screen#setState _ingame_state;
-  
+
   (* LOOP PRINCIPAL *)
-  while true do
+  while (screen#getState != _lose_state && screen#getState != _win_state) do
 
     (* PEGA EVENTO *)
     let event = Graphics.wait_next_event [ Graphics.Poll ] in
         if event.Graphics.keypressed then
-          pl#setKey (read_key ())
+          player#setKey (read_key ())
         else 
-          pl#setKey '0'
+          player#setKey '0'
     ;
 
     (* UPDATES *)
-    pl#update;
+    player#update;
 
 
     (* DESENHOS *)
     auto_synchronize false;
     screen#draw;
-    pl#draw;
-    synchronize ()
+    player#draw;
+    synchronize ();
+
+    
+    (* testa fim de jogo*)
+    if player#getLife < 0 then screen#setState _lose_state;
+    
   done;
   
   (* TELA FINAL *)
