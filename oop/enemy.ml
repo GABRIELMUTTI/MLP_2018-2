@@ -8,6 +8,6 @@ class enemy position = object(self)
   val speed = _enemy_speed
   val size = _enemy_size
   val step_distance = _enemy_step_distance
-  method update  = ()
+  method update dt = ()
   method draw = ()
 end

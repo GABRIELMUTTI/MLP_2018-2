@@ -6,7 +6,7 @@ class virtual game_object position = object(self)
   val virtual speed : float   
   val virtual size : int * int  
   val virtual step_distance : int                      
-  method virtual update : unit
+  method virtual update: float -> unit
   method virtual draw : unit
                
   method get_position =
