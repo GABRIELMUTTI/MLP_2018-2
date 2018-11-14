@@ -9,6 +9,7 @@ class screen = object(self)
   val mutable state = 0 (*0=initial; 1= In game; 2=lose; 3=win*)
   
   method setState newState = state <- newState 
+  method getState = state
 
   method private drawInitial () = 
     auto_synchronize false;
