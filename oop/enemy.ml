@@ -11,6 +11,12 @@ class enemy position = object(self)
   val downstep_distance = _enemy_downstep_distance
   val mutable direction = 0 (* Right = 0 ; Left = 1 ; Down = 2 *)
   val mutable delay = 0.0
+  val mutable down = false (*used for updating down only once*)
+
+  method setDown b = down  <- b
+  method getDown = down
+  method getDirection = direction
+  method setDirection n = direction <- n
   method private updateRight dt = 
     if delay > speed then
       begin position <- {position with x = position.x + step_distance};
@@ -28,9 +34,9 @@ class enemy position = object(self)
   method private updateDown dt = 
     if delay > speed then
       begin position <- {position with y = position.y - downstep_distance};
-            delay <- 0.0 end
+            delay <- 0.0; self#setDown true end
     else 
-      delay <- delay +. dt
+      delay <- delay +. dt; 
 
   method update dt = 
     match direction with

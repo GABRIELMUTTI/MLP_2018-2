@@ -62,6 +62,7 @@ let  main () =
     (* UPDATES *)
     player#update !dt;
     bullet#update !dt;
+    changeDirection enemies;
     List.iter (fun x -> x#update !dt) enemies;
     
     
