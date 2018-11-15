@@ -14,7 +14,7 @@ class player position = object(self)
     key <- keyPressed
   method getKey = key
   method getLife = life
-  method getPosition = position
+  
 
   method hit = life <- life -1
 

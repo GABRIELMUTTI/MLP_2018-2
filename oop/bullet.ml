@@ -13,7 +13,7 @@ class  bullet position owner = object(self)
   val mutable on = false
   method setOn b = on <- b 
   method getOn = on
-  method setPosition coord = position <- coord;
+  
 
   method update dt = 
   if owner == 1 || (owner == 0 && on) then

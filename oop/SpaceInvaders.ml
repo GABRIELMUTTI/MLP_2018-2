@@ -6,7 +6,7 @@ open Player;;
 open Config;;
 open Graphics;;
 open Screen;;
-
+open Utilities;;
 
 let  initial_screen screen = 
 
@@ -15,9 +15,6 @@ let  initial_screen screen =
 ;;
 
 
-let get_time_now () = 
-  Unix.gettimeofday ()
-;;
 
 let  main () =
   
@@ -28,6 +25,7 @@ let  main () =
   (*   CRIA OBJETOS PLAYER, INIMIGOS *)
   let player = new player {x = 300; y = 25} in
   let bullet = new bullet {x = 0; y = 0} 0 in
+  let enemies = build_enemies () in
 
   (* TELA INICIAL *)
   initial_screen screen;
@@ -48,7 +46,11 @@ let  main () =
           | 'd' -> player#setKey 'd'
           | ' ' -> if(not bullet#getOn) then 
                     begin bullet#setOn true; 
-                          bullet#setPosition player#getPosition end else ()
+                          bullet#setPosition 
+                            ({player#getPosition 
+                                with x = player#getPosition.x+22} ) 
+                        end 
+                   else ()
           | _ -> ()
         else
           ()
@@ -60,13 +62,18 @@ let  main () =
     (* UPDATES *)
     player#update !dt;
     bullet#update !dt;
+    List.iter (fun x -> x#update !dt) enemies;
+    
+    
 
 
     (* DESENHOS *)
     auto_synchronize false;
     screen#draw;
-    player#draw;
     bullet#draw;
+    player#draw;
+    List.iter (fun x -> x#draw) enemies;
+    
     synchronize ();
 
     

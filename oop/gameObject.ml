@@ -9,6 +9,8 @@ class virtual game_object position = object(self)
   method virtual update: float -> unit
   method virtual draw : unit
                
-  method get_position =
+  method getPosition =
     position
+
+  method setPosition coord = position <- coord;
 end
