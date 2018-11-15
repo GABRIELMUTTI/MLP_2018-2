@@ -12,9 +12,10 @@ class player position = object(self)
   val mutable key  = '0'
   method setKey keyPressed = 
     key <- keyPressed
-
   method getKey = key
   method getLife = life
+  
+
   method hit = life <- life -1
 
   method private updatePosition =
@@ -28,10 +29,10 @@ class player position = object(self)
       |'d' -> {position with x = position.x + step_distance }
       |_ -> position
 
-  method update  = 
-    match key with
-    |'a'|'d' -> position <- self#updatePosition
-    |_ -> position <- self#updatePosition
+  method update dt = 
+     position <- self#updatePosition; 
+     key <- '0' 
+    
 
   method private draw_life life = 
     set_color white;
