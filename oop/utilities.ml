@@ -3,7 +3,19 @@ open Enemy;;
 
 
 
-let checkBulletEnd bullet =
+let select_random_enemy enemies =
+  if List.length enemies > 1 then
+    (let random_index = Random.int ((List.length enemies) - 1) in
+     List.nth enemies random_index)
+  else
+    List.nth enemies 0
+
+
+let checkEnemyBulletEnd bullet =
+   bullet#getPosition.y < 0  
+;;
+
+let checkPlayerBulletEnd bullet =
   if bullet#getPosition.y > (snd _screen_size) then
     bullet#setOn false
   else ()

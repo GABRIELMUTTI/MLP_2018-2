@@ -30,7 +30,9 @@ class  bullet position owner = object(self)
   method draw = 
   if owner == 1 || (owner == 0 && on) then
     begin 
-    set_color (rgb 125 125 125);
+    if owner == 0 then set_color (rgb 125 125 125)
+      else set_color red
+    ;
     fill_rect position.x position.y (fst size) (snd size)
     end
   else
