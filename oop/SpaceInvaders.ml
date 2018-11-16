@@ -31,11 +31,12 @@ let  main () =
   initial_screen screen;
   screen#setState _ingame_state;
 
-  (* LOOP PRINCIPAL *)
+  
 
   let old_time = ref (get_time_now ()) in
   let new_time = ref 0.0 in
   let dt = ref 0.0 in
+  (* LOOP PRINCIPAL *)
   while (screen#getState != _lose_state && screen#getState != _win_state) do
 
     (* PEGA EVENTO *)
@@ -51,6 +52,7 @@ let  main () =
                                 with x = player#getPosition.x+22} ) 
                         end 
                    else ()
+          | '\027' -> screen#setState _lose_state
           | _ -> ()
         else
           ()
@@ -61,6 +63,7 @@ let  main () =
     old_time := !new_time;
     (* UPDATES *)
     player#update !dt;
+    checkBulletEnd bullet;
     bullet#update !dt;
     changeDirection enemies;
     List.iter (fun x -> x#update !dt) enemies;
