@@ -1,6 +1,15 @@
 open Config;;
 open Enemy;;
 
+
+
+let checkBulletEnd bullet =
+  if bullet#getPosition.y > (snd _screen_size) then
+    bullet#setOn false
+  else ()
+;;
+
+
 let  build_enemies  () =
   let enemies = ref [] in
   for i = 0 to _enemies_rows do
