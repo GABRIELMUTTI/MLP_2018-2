@@ -32,10 +32,11 @@ let  main () =
   screen#setState _ingame_state;
 
   
-
+  let bulletList = ref [] in
   let old_time = ref (get_time_now ()) in
   let new_time = ref 0.0 in
   let dt = ref 0.0 in
+  let enemy_fire_delay = ref 0.0 in
   (* LOOP PRINCIPAL *)
   while (screen#getState != _lose_state && screen#getState != _win_state) do
 
@@ -61,15 +62,28 @@ let  main () =
     new_time :=  get_time_now ();
     dt :=  !new_time -. !old_time; 
     old_time := !new_time;
+
     (* UPDATES *)
+    
+    if !enemy_fire_delay > _enemy_firerate then
+        let enemy = select_random_enemy enemies in 
+            ignore(enemy_fire_delay := 0.0);
+            bulletList := 
+              !bulletList@[(new bullet {enemy#getPosition with x = enemy#getPosition.x + 12} 1)]
+      else 
+        ignore(enemy_fire_delay := !enemy_fire_delay +. !dt);
+  
+
+
     player#update !dt;
-    checkBulletEnd bullet;
+    checkPlayerBulletEnd bullet;
     bullet#update !dt;
     changeDirection enemies;
     List.iter (fun x -> x#update !dt) enemies;
+    List.iter (fun x -> x#update !dt) !bulletList;
     
     
-
+    bulletList := List.filter (fun x -> not(checkEnemyBulletEnd x) ) !bulletList;
 
     (* DESENHOS *)
     auto_synchronize false;
@@ -77,6 +91,7 @@ let  main () =
     bullet#draw;
     player#draw;
     List.iter (fun x -> x#draw) enemies;
+    List.iter (fun x -> x#draw) !bulletList;
     
     synchronize ();
 
