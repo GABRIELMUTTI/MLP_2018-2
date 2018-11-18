@@ -38,7 +38,7 @@ class bullet position size speed step_distance owner = object(self)
   done; ()
   
 
-  method draw = 
+  method draw () = 
   if owner == 1 || (owner == 0 && on) then
     begin 
     if owner == 0 then set_color (rgb 125 125 125)

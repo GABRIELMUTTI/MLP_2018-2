@@ -39,7 +39,7 @@ class player position size speed step_distance = object(self)
     draw_string "LIFES : " ;
     draw_string (string_of_int life)
     
-  method draw =  
+  method draw () =  
     set_color white;
     fill_rect position.x position.y (fst size) (snd size);
     set_color black;

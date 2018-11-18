@@ -94,7 +94,9 @@ let  main () =
     (* DESENHOS *)
     auto_synchronize false;
     screen#draw;
-    List.iter (fun x -> !x#draw) !_objects;
+    
+    List.iter (fun i -> Thread.join i)
+      (List.map (fun obj -> Thread.create !obj#draw ()) !_objects);
     
     synchronize ();
 

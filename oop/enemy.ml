@@ -46,7 +46,7 @@ class enemy position size speed step_distance = object(self)
       | 2 -> self#updateDown dt
       | _ -> ()
 
-  method draw = 
+  method draw () = 
     set_color green;
     fill_rect position.x position.y (fst size) (snd size);
     set_color black;

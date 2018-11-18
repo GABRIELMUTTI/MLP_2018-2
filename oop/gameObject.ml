@@ -17,7 +17,7 @@ class virtual game_object (position : coords)
   val mutable object_type = object_type
                             
   method virtual update : float -> unit
-  method virtual draw : unit
+  method virtual draw : unit -> unit
   method virtual onCollision : game_object -> int -> unit
                     
   method getPosition = position
