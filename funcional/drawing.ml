@@ -90,3 +90,15 @@ let draw_game_over_screen () =
   draw_string "GAME OVER PRESS ESC TO EXIT";
   synchronize ();
 ;;
+
+
+let draw_win_screen () =  
+    auto_synchronize false;
+    clear_graph ();
+    set_color cyan;
+    fill_rect 0 0 900 600;
+    moveto 300 300;
+    set_color black;
+    draw_string "YOU SAVE US ALL, YOU ARE THE NEW JESUS! PRESS ESC TO EXIT";
+    synchronize ();
+;;

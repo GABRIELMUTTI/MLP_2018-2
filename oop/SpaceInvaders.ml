@@ -100,6 +100,9 @@ let  main () =
     
     synchronize ();
 
+    if(((enemy_far_down !enemies)#getPosition).y <= _game_over_line)
+      then screen#setState _lose_state
+    ;
     
     (* testa fim de jogo*)
     if !player#getLife <= 0 then screen#setState _lose_state;
@@ -109,8 +112,11 @@ let  main () =
   (* TELA FINAL *)
   screen#draw;
   ignore(Graphics.wait_next_event [ Key_pressed ]);
+  while (read_key ()) != '\027' do
+    ignore(Graphics.wait_next_event [ Key_pressed ])
+  done;
   screen#closeW
-
+;;
 
   
 let _ = main ()

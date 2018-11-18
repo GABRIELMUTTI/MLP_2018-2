@@ -51,4 +51,5 @@ type game_state =
     hit_flash : bool;
     hit_flash_delay : float;
     game_over : bool;
+    game_win : bool;
   }

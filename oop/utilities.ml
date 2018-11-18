@@ -37,6 +37,11 @@ let  build_enemies  () =
   !enemies
 ;;
 
+let enemy_far_down enemy_list=
+  let list = List.sort (fun a b -> compare a#getPosition.y b#getPosition.y) enemy_list in
+    List.hd list
+;;
+
 let enemy_far_right enemy_list =
   let list = List.sort (fun a b -> compare a#getPosition.x b#getPosition.x) enemy_list in
     List.hd (List.rev list)

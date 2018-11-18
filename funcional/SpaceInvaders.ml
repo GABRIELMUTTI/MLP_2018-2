@@ -32,6 +32,14 @@ let rec game_over_screen () =
   |_ -> game_over_screen ()
 ;;
 
+let rec game_win_screen () =
+  draw_win_screen ();
+  ignore(Graphics.wait_next_event [ Key_pressed ]);
+  match (read_key ()) with
+  |'\027' -> ()
+  |_ -> game_win_screen ()
+;;
+
 let rec mainloop state old_time =
 
   let new_time = get_time_now () in
@@ -43,6 +51,8 @@ let rec mainloop state old_time =
 
 
   if (state.game_over || (state.player_life <= 0)) then {state with game_over=true}
+  else
+  if(state.game_win) then state
   else
     let event = Graphics.wait_next_event [ Graphics.Poll ] in
       if event.Graphics.keypressed then
@@ -78,10 +88,12 @@ let  main () =
       hit_flash = false;
       hit_flash_delay = 0.0;
       game_over = false;
+      game_win = false;
       
     } 0.0 in
 
   if state.game_over then game_over_screen ();
+  if state.game_win then game_win_screen ();
   close_graph ();
 ;;
 

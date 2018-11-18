@@ -195,7 +195,11 @@ let update_state state dt =
   let state7' = update_enemy_bullets state6' dt in
   let state8' = check_bullets_player_collision state7' in
   let state9' = check_hit_flash_delay state8' dt in
-  state9'
+  let state10' =  if ((List.length (state9'.enemies)) == 0) then
+                    {state9' with game_win = true} else state9' in
+  state10'
+    ;
+
 ;;
 
 let fire_bullet state =
