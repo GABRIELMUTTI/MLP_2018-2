@@ -27,11 +27,11 @@ let  main () =
   (*   CRIA OBJETOS PLAYER, INIMIGOS *)
   let player = ref (new player {x = 300; y = 25} _player_size 0.0 _player_step_distance) in
   let bullet = ref (new bullet {x = 0; y = 0} _bullet_size _bullet_speed _bullet_step_distance 0) in
-  let enemies = build_enemies () in
+  let enemies = ref (build_enemies ()) in
 
   _objects := List.cons (ref (!player :> game_object)) !_objects;
   _objects := List.cons (ref (!bullet :> game_object)) !_objects;
-  List.iter (fun x -> _objects := List.cons (ref x : game_object ref) !_objects) (enemies :> game_object list);
+  List.iter (fun x -> _objects := List.cons (ref x : game_object ref) !_objects) ((!enemies :> game_object list));
 
   
   (* TELA INICIAL *)
@@ -83,8 +83,12 @@ let  main () =
 
 
     checkPlayerBulletEnd !bullet;
-    changeDirection enemies;
+    changeDirection !enemies;
     List.iter (fun x -> !x#update !dt) !_objects;
+
+    enemies := List.filter (fun x -> not x#getRemove) !enemies;
+
+    
     
     
     _objects := List.filter (fun x -> not(checkEnemyBulletEnd !x) ) !_objects;
