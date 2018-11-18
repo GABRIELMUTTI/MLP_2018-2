@@ -88,7 +88,8 @@ let  main () =
 
     enemies := List.filter (fun x -> not x#getRemove) !enemies;
 
-    
+    if List.length !enemies == 0 then
+      screen#setState _win_state;
     
     
     _objects := List.filter (fun x -> not(checkEnemyBulletEnd !x) ) !_objects;
