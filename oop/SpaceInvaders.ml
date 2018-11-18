@@ -73,10 +73,10 @@ let  main () =
     (* UPDATES *)
   
     if !enemy_fire_delay > _enemy_firerate then
-        let enemy = select_random_enemy enemies in 
+        let enemy = select_random_enemy _objects in 
             ignore(enemy_fire_delay := 0.0);
             _objects := 
-              !_objects@[ref (new bullet {enemy#getPosition with x = enemy#getPosition.x + 12} _bullet_size _bullet_speed _bullet_step_distance 1 :> game_object)]
+              !_objects@[ref (new bullet {!enemy#getPosition with x = !enemy#getPosition.x + 12} _bullet_size _bullet_speed _bullet_step_distance 1 :> game_object)]
       else 
         ignore(enemy_fire_delay := !enemy_fire_delay +. !dt);<
   

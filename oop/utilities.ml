@@ -4,7 +4,9 @@ open GameObject;;
 
 
 
-let select_random_enemy enemies =
+let select_random_enemy objs =
+  let enemies = List.filter (fun x -> !x#getType = "enemy") !_objects in
+  Printf.printf "enemies size=%d\n" (List.length enemies);
   if List.length enemies > 1 then
     (let random_index = Random.int ((List.length enemies) - 1) in
      List.nth enemies random_index)
