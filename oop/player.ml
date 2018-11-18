@@ -2,6 +2,7 @@ open Ship;;
 open Config;;
 open Graphics;;
 open Bullet;;
+open GameObject;;
 
 (* Classe do jogador. *)
 class player position size speed step_distance = object(self)
@@ -36,7 +37,7 @@ class player position size speed step_distance = object(self)
     set_color white;
     moveto 830 5;
     draw_string "LIFES : " ;
-    draw_string (string_of_int life)  
+    draw_string (string_of_int life)
     
   method draw =  
     set_color white;

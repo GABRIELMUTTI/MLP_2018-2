@@ -38,8 +38,6 @@ let  main () =
   initial_screen screen;
   screen#setState _ingame_state;
 
-  
-  let bulletList = ref [] in
   let old_time = ref (get_time_now ()) in
   let new_time = ref 0.0 in
   let dt = ref 0.0 in
@@ -48,7 +46,7 @@ let  main () =
   while (screen#getState != _lose_state && screen#getState != _win_state) do
 
     (* PEGA EVENTO *)
-    let event = Graphics.wait_next_event [ Graphics.Poll ] in
+    (let event = Graphics.wait_next_event [ Graphics.Poll ] in
         if event.Graphics.keypressed then
           match (read_key ()) with
           | 'a' -> !player#setKey 'a'
@@ -63,8 +61,7 @@ let  main () =
           | '\027' -> screen#setState _lose_state
           | _ -> ()
         else
-          ()
-    ;
+          (););
 
     new_time :=  get_time_now ();
     dt :=  !new_time -. !old_time; 
@@ -78,7 +75,7 @@ let  main () =
             _objects := 
               !_objects@[ref (new bullet {!enemy#getPosition with x = !enemy#getPosition.x + 12} _bullet_size _bullet_speed _bullet_step_distance 1 :> game_object)]
       else 
-        ignore(enemy_fire_delay := !enemy_fire_delay +. !dt);<
+        ignore(enemy_fire_delay := !enemy_fire_delay +. !dt);
   
 
 
