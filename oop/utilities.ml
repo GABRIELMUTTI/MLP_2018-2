@@ -1,9 +1,11 @@
 open Config;;
 open Enemy;;
+open GameObject;;
 
 
 
-let select_random_enemy enemies =
+let select_random_enemy objs =
+  let enemies = List.filter (fun x -> !x#getType = "enemy") !_objects in
   if List.length enemies > 1 then
     (let random_index = Random.int ((List.length enemies) - 1) in
      List.nth enemies random_index)
@@ -12,7 +14,7 @@ let select_random_enemy enemies =
 
 
 let checkEnemyBulletEnd bullet =
-   bullet#getPosition.y < 0  
+  bullet#getType == "bullet" && bullet#getPosition.y < 0  
 ;;
 
 let checkPlayerBulletEnd bullet =
@@ -27,7 +29,7 @@ let  build_enemies  () =
   for i = 0 to _enemies_rows do
     for k = 0 to _enemies_lines do
         enemies := !enemies@[new enemy {x =(fst _first_enemy_pos) + (fst _space_between_enemies)*i;
-                            y = (snd _first_enemy_pos)-(snd _space_between_enemies)*k}
+                            y = (snd _first_enemy_pos)-(snd _space_between_enemies)*k} _enemy_size _enemy_speed _enemy_step_distance
         ]  
       done
         
@@ -45,7 +47,7 @@ let enemy_far_left enemy_list =
     List.hd list
 ;;
 
-let changeDirection (enemy_list: Enemy.enemy list) =
+let changeDirection enemy_list =
   match (List.hd enemy_list)#getDirection with
     | 0 -> if (enemy_far_right enemy_list)#getPosition.x >= (snd _enemy_area_border) then
               List.iter (fun x -> x#setDirection 2) enemy_list else ()

@@ -1,18 +1,19 @@
 open Ship;;
 open Config;;
 open Graphics;;
+open GameObject;;
 
 (* Classe dos inimigos. *)
-class enemy position = object(self)
-  inherit ship position
-  val speed = _enemy_speed
-  val size = _enemy_size
-  val step_distance = _enemy_step_distance
+class enemy position size speed step_distance = object(self)
+  inherit ship position size speed step_distance "enemy"
+  val mutable remove = false 
   val downstep_distance = _enemy_downstep_distance
   val mutable direction = 0 (* Right = 0 ; Left = 1 ; Down = 2 *)
   val mutable delay = 0.0
   val mutable down = false (*used for updating down only once*)
 
+  method getRemove = remove
+  method setRemove b = remove <- b
   method setDown b = down  <- b
   method getDown = down
   method getDirection = direction
@@ -55,4 +56,10 @@ class enemy position = object(self)
     fill_rect (position.x+25) position.y 2 6;
     fill_rect (position.x+7) position.y 4 6;
     fill_rect (position.x+16) position.y 4 6
+
+  method onCollision obj owner =
+    if owner == 0 then
+      (_objects := List.filter (fun x -> !x != (self :> game_object)) !_objects;
+       _objects := List.filter (fun x -> !x != obj) !_objects;
+      self#setRemove true)
 end
