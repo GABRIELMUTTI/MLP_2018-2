@@ -9,13 +9,15 @@ class player position size speed step_distance = object(self)
   inherit ship position _player_size speed step_distance "player"
   val mutable life = _player_life
   val mutable key  = '0'
+  val mutable dtHit = 0.0
+  val mutable hitP = false
   method setKey keyPressed = 
     key <- keyPressed
   method getKey = key
   method getLife = life
   
 
-  method hit = life <- life -1
+  method hit = life <- life -1; hitP <- true
 
   method private updatePosition =
     if position.x < (fst _player_boundaries) then 
@@ -30,7 +32,8 @@ class player position size speed step_distance = object(self)
 
   method update dt = 
      position <- self#updatePosition; 
-     key <- '0' 
+     key <- '0';
+     if hitP then dtHit <- dtHit +. dt
     
 
   method private draw_life life = 
@@ -41,6 +44,14 @@ class player position size speed step_distance = object(self)
     
   method draw () =  
     set_color white;
+    if hitP then
+      if dtHit > 0.5 then
+        begin dtHit <- 0.0; hitP <- false end
+      else
+          set_color red;
+          
+
+    
     fill_rect position.x position.y (fst size) (snd size);
     set_color black;
     fill_rect position.x (position.y+12) 15 13;
