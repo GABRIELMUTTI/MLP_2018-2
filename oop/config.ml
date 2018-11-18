@@ -1,13 +1,10 @@
-
-type coords =
-  {
-    x : int;
-    y : int;
-  }
+open GameObject;;
 
 
 (*** GAME CONTROL AND DESIGN "CONSTANTS" ***)
 
+let _objects : (game_object ref) list ref = ref []
+  
 let _screen_size = (900, 600);;
 let _game_over_line = 100;;
 

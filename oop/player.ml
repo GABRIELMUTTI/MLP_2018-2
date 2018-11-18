@@ -1,13 +1,11 @@
 open Ship;;
 open Config;;
 open Graphics;;
+open Bullet;;
 
 (* Classe do jogador. *)
-class player position = object(self)
-  inherit ship position
-  val speed = 0.0   (*not used*)
-  val size = _player_size
-  val step_distance = _player_step_distance
+class player position size speed step_distance = object(self)
+  inherit ship position _player_size speed step_distance "player"
   val mutable life = _player_life
   val mutable key  = '0'
   method setKey keyPressed = 
@@ -39,8 +37,7 @@ class player position = object(self)
     moveto 830 5;
     draw_string "LIFES : " ;
     draw_string (string_of_int life)  
-  
-
+    
   method draw =  
     set_color white;
     fill_rect position.x position.y (fst size) (snd size);
@@ -49,4 +46,8 @@ class player position = object(self)
     fill_rect (position.x + ((fst size) - 15)) (position.y+12) 15 13;
     self#draw_life life
 
+  method onCollision obj owner =
+    if owner == 1 then
+      (self#hit;
+     _objects := List.filter (fun x -> !x != obj) !_objects)
 end

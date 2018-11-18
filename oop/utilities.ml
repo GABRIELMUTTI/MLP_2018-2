@@ -1,5 +1,6 @@
 open Config;;
 open Enemy;;
+open GameObject;;
 
 
 
@@ -12,7 +13,7 @@ let select_random_enemy enemies =
 
 
 let checkEnemyBulletEnd bullet =
-   bullet#getPosition.y < 0  
+  bullet#getType == "bullet" && bullet#getPosition.y < 0  
 ;;
 
 let checkPlayerBulletEnd bullet =
@@ -27,7 +28,7 @@ let  build_enemies  () =
   for i = 0 to _enemies_rows do
     for k = 0 to _enemies_lines do
         enemies := !enemies@[new enemy {x =(fst _first_enemy_pos) + (fst _space_between_enemies)*i;
-                            y = (snd _first_enemy_pos)-(snd _space_between_enemies)*k}
+                            y = (snd _first_enemy_pos)-(snd _space_between_enemies)*k} _enemy_size _enemy_speed _enemy_step_distance (i + k)
         ]  
       done
         
