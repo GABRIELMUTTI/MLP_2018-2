@@ -103,7 +103,7 @@ let  main () =
 
     
     (* testa fim de jogo*)
-    if !player#getLife < 0 then screen#setState _lose_state;
+    if !player#getLife <= 0 then screen#setState _lose_state;
     
   done;
   
